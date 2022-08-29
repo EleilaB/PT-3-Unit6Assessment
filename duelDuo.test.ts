@@ -19,17 +19,16 @@ test('Title shows up when page loads', async () => {
     expect(displayed).toBe(true)
 })
 
-test('Choices header shows up after clicking "draw" button', async () => {
-    const choiceHead = await driver.findElement(By.id('choose-header'))
-    const displayed = await choiceHead.isDisplayed()
-    await driver.findElement(By.id('draw')).click()
+test('See All Bots shows up when page loads', async () => {
+    const seeAllBots = await driver.findElement(By.id('see-all'))
+    const displayed = await seeAllBots.isDisplayed()
     expect(displayed).toBe(true)
 })
 
-test('When Add to Duo button is clicked the "Your Duo" h2 shows up', async () => {
-    const yourDuo = await driver.findElement(By.id('your-duo-header'))
-    const displayed = await yourDuo.isDisplayed()
-    await driver.findElement(By.id('draw')).click()
-    await driver.findElement(By.className('bot-btn')).click()
-    expect(displayed).toBe(true)
+test('Wins and Losses show up when page loads', async () => {
+    const wins = await driver.findElement(By.id('wins'))
+    const losses = await driver.findElement(By.id('losses'))
+    const winsDisplayed = await wins.isDisplayed()
+    const lossesDisplayed = await losses.isDisplayed()
+    expect(winsDisplayed && lossesDisplayed).toBe(true)
 })

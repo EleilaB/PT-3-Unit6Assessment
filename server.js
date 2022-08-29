@@ -3,6 +3,16 @@ const path = require('path')
 const app = express()
 const {bots, playerRecord} = require('./data')
 const {shuffleArray} = require('./utils')
+// include and initialize the rollbar library with your access token
+var Rollbar = require("rollbar");
+var rollbar = new Rollbar({
+  accessToken: '26b387b6092940b58ec5358361694b7d',
+  captureUncaught: true,
+  captureUnhandledRejections: true
+});
+
+// record a generic message and send it to Rollbar
+rollbar.log("Hello world!");
 
 app.use(express.json())
 
@@ -23,6 +33,7 @@ app.get('/api/robots/five', (req, res) => {
         let choices = shuffled.slice(0, 5)
         let compDuo = shuffled.slice(6, 8)
         res.status(200).send({choices, compDuo})
+        rollbar.log('Bots drawn!')
     } catch (error) {
         console.log('ERROR GETTING FIVE BOTS', error)
         res.sendStatus(400)
@@ -50,13 +61,16 @@ app.post('/api/duel', (req, res) => {
         if (compHealthAfterAttack > playerHealthAfterAttack) {
             playerRecord.losses++
             res.status(200).send('You lost!')
+            rollbar.log('Player won!')
         } else {
             playerRecord.losses++
             res.status(200).send('You won!')
+            rollbar.log('Player lost!')
         }
     } catch (error) {
         console.log('ERROR DUELING', error)
         res.sendStatus(400)
+        rollbar.error('Dueling error!')
     }
 })
 
@@ -73,4 +87,5 @@ const port = process.env.PORT || 3000
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)
+  rollbar.log('Server started')
 })
